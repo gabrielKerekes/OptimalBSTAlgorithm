@@ -7,13 +7,13 @@ namespace BinarySearchTree
         public int Count { get; set; }
         public bool Added { get; set; } = false;
 
-        public float probability = float.NaN;
-        public float Probability
+        public double probability = double.NaN;
+        public double Probability
         {
             get
             {
                 if (double.IsNaN(probability))
-                    probability = (float)Count / Algorithm.SumOfCounts;
+                    probability = (double)Count / Algorithm.SumOfCounts;
 
                 return probability;
             }

@@ -46,7 +46,7 @@ namespace BinarySearchTree
         {
             var stack = new Queue<Help>();
             var rootHelp = new Help(0, table.Length - 1);
-            stack.Enqueue(new Help(0, table.Length - 1));
+            stack.Enqueue(rootHelp);
 
             var rootIndex = table[rootHelp.Row][rootHelp.Column];
             var rootItem = new BSTItem(keys[rootIndex]);
@@ -58,17 +58,25 @@ namespace BinarySearchTree
                 var current = stack.Dequeue();
                 if (current.Row > current.Column)
                 {
-                    //if (!keyDummies[current.Row][0].Added)
-                    //{
-                    //    bst.Add(new BSTItem(keyDummies[current.Row]));
-                    //    keyDummies[current.Row][0].Added = true;
-                    //}
+                    if (keyDummies[current.Row].Count > 0 && !keyDummies[current.Row][0].Added)
+                    {
+                        bst.Add(new BSTItem(keyDummies[current.Row]));
+                        keyDummies[current.Row][0].Added = true;
+                    }
 
-                    //if (!keyDummies[current.Column + 1][0].Added)
+                    //if (current.Row < keyDummies.Count - 1)
                     //{
-                    //    bst.Add(new BSTItem(keyDummies[current.Column + 1]));
-                    //    keyDummies[current.Column + 1][0].Added = true;
+                    //    if (keyDummies[current.Row + 1].Count > 0 && !keyDummies[current.Row + 1][0].Added)
+                    //    {
+                    //        bst.Add(new BSTItem(keyDummies[current.Row + 1]));
+                    //        keyDummies[current.Row + 1][0].Added = true;
+                    //    }
                     //}
+                    if (keyDummies[current.Column + 1].Count > 0 && !keyDummies[current.Column + 1][0].Added)
+                    {
+                        bst.Add(new BSTItem(keyDummies[current.Column + 1]));
+                        keyDummies[current.Column + 1][0].Added = true;
+                    }
                 }
                 else
                 {
@@ -198,7 +206,12 @@ namespace BinarySearchTree
             var current = this;
             while (true)
             {
-                var comparisonResult = string.CompareOrdinal(str, current.Item.Word.Value);
+                int comparisonResult;
+                if (current.Item.Word != null)
+                    comparisonResult = string.CompareOrdinal(str, current.Item.Word.Value);
+                else
+                    comparisonResult = 0;//string.CompareOrdinal(str, current.Item.Word.Value);
+
                 count++;
 
                 if (comparisonResult < 0)

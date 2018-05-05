@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 
 // 7 bis, 14 - 15,
 
@@ -14,8 +15,12 @@ namespace BinarySearchTree
 
             //int sum = 0;
             //int i = 0;
-            //foreach (var line in File.ReadLines("myDictionary.txt"))
+#if SKOLA
             foreach (var line in File.ReadLines("dictionary.txt"))
+#endif
+#if MOJE
+            foreach (var line in File.ReadLines("myDictionary.txt"))
+#endif
             {
                 var word = Word.FromLine(line);
                 algorithm.Add(word);
@@ -48,8 +53,12 @@ namespace BinarySearchTree
             //{
             //    Console.WriteLine(dummy);
             //}
-
+            Console.WriteLine(algorithm.KeyDummies.Values.Sum(v => v.Count));
             var result = algorithm.OptimalBst();
+
+            //var p = new[] { 0.15, 0.10, 0.05, 0.10, 0.20, };
+            //var q = new[] { 0.05, 0.10, 0.05, 0.05, 0.05, 0.10, };
+            //var result2 = Algorithm.OptimalBst(p, q);
 
             //foreach (var e in result.Item1)
             //{
@@ -72,8 +81,6 @@ namespace BinarySearchTree
 
             //    Console.WriteLine();
             //}
-
-            // todo: skoncene pri tom, ze musim z tabulky postavit strom...
 
             for (var i = 0; i < result.Item2.Length; i++)
             {

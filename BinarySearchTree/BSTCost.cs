@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BinarySearchTree
 {
@@ -20,7 +21,10 @@ namespace BinarySearchTree
                 var topBst = topTuple.Item1;
                 var topItemLevel = topTuple.Item2;
 
-                sum += topBst.Item.Word.Probability * topItemLevel;
+                if (topBst.Item.Word != null)
+                    sum += topBst.Item.Word.Probability * topItemLevel;
+                else
+                    sum += topBst.Item.Dummies.Sum(d => d.Probability) * topItemLevel;
 
                 if (topBst.Left != null)
                     stack.Push(Tuple.Create(topBst.Left, topItemLevel + 1));

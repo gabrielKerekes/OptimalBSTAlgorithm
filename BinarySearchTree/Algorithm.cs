@@ -7,10 +7,14 @@ namespace BinarySearchTree
 {
     public class Algorithm
     {
+#if SKOLA
         public const int SumOfCounts = 82540704;
         public const int KeyThreshold = 50000;
-        //public const int SumOfCounts = 423;
-        //public const int KeyThreshold = 50;
+#endif
+#if MOJE
+        public const int SumOfCounts = 423;
+        public const int KeyThreshold = 50;
+#endif
 
 
         public List<Word> Keys { get; set; } = new List<Word>();
@@ -66,46 +70,57 @@ namespace BinarySearchTree
             }
         }
 
-        public Tuple<float[][], int[][]> OptimalBst(/*List<double> keyProbs, List<double> dummyProbs*/)
+        public Tuple<double[][], int[][]> OptimalBst()
         {
-            var sw = Stopwatch.StartNew();
-
             var keyProbs = Keys.Select(k => k.Probability).ToArray();
-            var dummyProbs = KeyDummies.Select(kvp => kvp.Value.Sum(d => d.Probability)).ToArray();
-            //dummyProbs.Insert(0, 0);
-
-            var n = keyProbs.Length /*+ dummyProbs.Count*/;
-
-            var e = new float[n + 2][];
-            var w = new float[n + 2][];
-            var root = new int[n][];
-            for (var i = 0; i < n + 2; i++)
+        
+            var dummyProbs = new double[KeyDummies.Count];
+            foreach (var keyDummy in KeyDummies)
             {
-                e[i] = new float[n + 1];
-                w[i] = new float[n + 1];
-                if (i < n)
-                    root[i] = new int[n];
+                dummyProbs[keyDummy.Key] = keyDummy.Value.Sum(d => d.Probability);
             }
 
-            for (var i = 1; i < n + 1; i++)
+            return OptimalBst(keyProbs, dummyProbs);
+        }
+
+        public static Tuple<double[][], int[][]> OptimalBst(double[] keyProbs, double[] dummyProbs)
+        {
+            var keyProbsList = keyProbs.ToList();
+            keyProbsList.Insert(0, 0);
+            keyProbs = keyProbsList.ToArray();
+
+            //var dummyProbsList = keyProbs.ToList();
+            //dummyProbsList.Insert(0, 0);
+            //dummyProbs = dummyProbsList.ToArray();
+
+            var n = keyProbs.Length - 1;
+
+            var e = new double[n + 2][];
+            var w = new double[n + 2][];
+            var root = new int[n][];
+            for (var i = 1; i <= n + 1; i++)
+            {
+                e[i] = new double[n + 1];
+                w[i] = new double[n + 1];
+                if (i <= n)
+                    root[i - 1] = new int[n];
+            }
+
+            for (var i = 1; i <= n + 1; i++)
             {
                 e[i][i - 1] = dummyProbs[i - 1];
                 w[i][i - 1] = dummyProbs[i - 1];
             }
 
-            for (var l = 1; l < n + 1; l++)
+            for (var l = 1; l <= n; l++)
             {
-                //if (l % 300 == 0)
-                //{
-                //    Console.WriteLine($"{l}/{n} -- {sw.Elapsed.TotalMilliseconds}");
-                //}
-
-                for (var i = 1; i < n - l + 2; i++)
+                for (var i = 1; i <= n - l + 1; i++)
                 {
                     var j = i + l - 1;
-                    e[i][j] = float.PositiveInfinity;
-                    w[i][j] = w[i][j - 1] + keyProbs[j - 1] + dummyProbs[j - 1];
-                    for (var r = i; r < j + 1; r++)
+                    e[i][j] = double.PositiveInfinity;
+                    w[i][j] = w[i][j - 1] + keyProbs[j] + dummyProbs[j];
+
+                    for (var r = i; r <= j; r++)
                     {
                         var t = e[i][r - 1] + e[r + 1][j] + w[i][j];
                         if (t < e[i][j])
@@ -121,3 +136,4 @@ namespace BinarySearchTree
         }
     }
 }
+ 

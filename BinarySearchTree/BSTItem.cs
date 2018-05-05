@@ -23,6 +23,11 @@ namespace BinarySearchTree
 
         public override string ToString()
         {
+            if (Word == null)
+                return $"-- {string.Join(",", Dummies)}";
+            if (Dummies == null)
+                return $"{Word}";
+
             return $"{Word} -- {string.Join(",", Dummies)}";
         }
     }
